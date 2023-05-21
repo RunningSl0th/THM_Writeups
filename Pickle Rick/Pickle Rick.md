@@ -1,8 +1,27 @@
 # Pickle Rick
+
+- [Pickle Rick](#pickle-rick)
+- [HTML Source Code](#html-source-code)
+  - [robots.txt](#robotstxt)
+- [NMAP](#nmap)
+  - [NMAP Results](#nmap-results)
+- [Directory and page scanning with ffuf](#directory-and-page-scanning-with-ffuf)
+  - [clue.txt](#cluetxt)
+- [Login](#login)
+- [Command execution](#command-execution)
+- [First ingredient](#first-ingredient)
+- [Second ingredient](#second-ingredient)
+  - [Bypassing command filter](#bypassing-command-filter)
+- [Third ingredient](#third-ingredient)
+- [Analysis](#analysis)
+
 In the instruction of this lab it says that we simply can go to `https://<LAB IP>.p.thmlabs.com/`. No need to NMAP here.
 
 
 We see a nice page and it seems Rick forgot his password (and turned himself into a pickle again. We have to look for some ingredients which we have to fill in in the answer fields (3x). But first let's look for the password.
+
+![](images/pr1.png)
+
 
 # HTML Source Code
 Since we only have this page we can check the headers and url of the page to look for information. One simple thing to do is to check the HTML source.
@@ -64,6 +83,8 @@ I the results it gives me the `/portal.php` which redirects to `/login.php`.
 Since we only have a username we have to look for the password. But first try username = password. You never know....
 Okay now we know that that wasn't the case.
 
+![](images/pr2.png)
+
 ### clue.txt
 Since ffuf was still running I noticed a `/clue.txt` file. Let's check it out:
 ```html
@@ -78,7 +99,10 @@ Wait... maybe we can try the gibberish of the robotx.txt
 
 Bingo!! We can login with the username R1ckRul3s and the password Wubbalubbadubdub from the robots.txt file
 
-## Comman executution
+## Command executution
+
+![](images/pr3.png)
+
 When logged in we finde the command panel. We need to unpickle Rick ASAP. We're looking for ingredients.
 ```
 ls
@@ -103,6 +127,8 @@ cat Sup3rS3cretPickl3Ingred.txt
 ```
 
 Oops the command is disabled.
+
+![](images/pr4.png)
 
 # First ingredient
 Since we can read robots.txt in the browser we have a good change that we can do the same with Sup3rS3cretPickl3Ingred.txt. 
