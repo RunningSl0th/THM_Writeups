@@ -3,3 +3,4 @@ Here are my writeups from Try Hack Me. In the writeups I give some some security
 
 Writeups:
 1. Basic Pentesting
+2. Pickle Rick
