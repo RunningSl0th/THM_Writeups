@@ -116,7 +116,7 @@ So let's switch to the `fsocity.dic` to check if there is a valid username.
 
 I'm using the tool `wfuzz` for this. You could also use `hydra` with the `http-form-post`. But I just find the `wfuzz` syntax a bit better:
 ```zsh
-wfuzz -c -w ~/Downloads/fsocity.dic --hs Invalid -d "log=FUZZ&pwd=password" -u http://10.10.22.96/wp-login.php
+wfuzz -c -w ~/Downloads/fsocity.dic --hs Invalid -d "log=FUZZ&pwd=password&wp-submit=Log In"" -u http://10.10.22.96/wp-login.php
 ```
 What does this mean:
 --c: simply output with colors
@@ -126,22 +126,34 @@ What does this mean:
 --u is the url we are requesting
 
 How do we get the right data parameters? On the `/wp-login.php` page we can just simply right click in the page and view the page source.
-We will look for the names of the username and password entry field.
+We will look for the names of the username and password entry field and the submit button.
 
 ```html
-<p>
+
+
+<form name="loginform" id="loginform" action="http://10.10.22.96/wp-login.php" method="post">
+	<p>
 		<label for="user_login">Username<br/>
-		<input type="text" name="log" id="user_login" aria-describedby="login_error" class="input" value="" size="20"/></label>
+		<input type="text" name="log" id="user_login" aria-describedby="login_error" class="input" value="Elliot" size="20"/></label>
 	</p>
 	<p>
 		<label for="user_pass">Password<br/>
 		<input type="password" name="pwd" id="user_pass" aria-describedby="login_error" class="input" value="" size="20"/></label>
 	</p>
+		<p class="forgetmenot"><label for="rememberme"><input name="rememberme" type="checkbox" id="rememberme" value="forever"/> Remember Me</label></p>
+	<p class="submit">
+		<input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Log In"/>
+		<input type="hidden" name="redirect_to" value="http://10.10.22.96/wp-admin/"/>
+		<input type="hidden" name="testcookie" value="1"/>
+	</p>
+</form>
 ```
 
-Here we see the names `log` for the username and `pwd` for the password.
+Here we see the names `log` for the username and `pwd` for the password. Lastly the name of the submit button is `wp-submit` and the value we give it is `Log In`. We could also capture the request with burp and get the post parameters from there.
 
 The regex we want to hide is the message we get when posting a invalid username. We can just put a random name in the field. We can put the whole message or just part of it as a value of the `--hs` flag.
+
+![Invalid](Invalid.png)
 
 ## Wfuzz results
 ```zsh
@@ -162,7 +174,20 @@ ID           Response   Lines    Word       Chars       Payload
 Bingo we found a username! Let's try bruteforcing the password with hydra. The syntax is similar.
 
 ```zsh
-wfuzz -c -w /usr/share/wordlists/rockyou.txt  -hs incorrect -d "log=ELLIOT&pwd=FUZZ" -u http://10.10.22.96/wp-login.php
+wfuzz -c -w ~/Downloads/fsocity.dic --hs incorrect -d "log=Elliot&pwd=FUZZ&wp-submit=Log In" -u http://10.10.22.96/wp-login.php 
 ```
+
+That took a while and got me hesitating. Usualy it doesn't take so long. So I check another walkthrough (cheating) after I could not find any additional information.
+
+#  Exploiting Wordpress
+Now we are able to login to the wordpress dashboard
+
+There are several ways to exploit the wordpress dashboard and get a reverse shell. The easiest way that  I like is to add php code to a theme.
+
+1. Go to `Appearance` -> `editor`
+
+
+
+
 
 
