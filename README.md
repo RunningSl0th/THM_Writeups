@@ -5,3 +5,4 @@ Writeups:
 1. Basic Pentesting
 2. Pickle Rick
 3. Zeno
+4. Mr. Robot
