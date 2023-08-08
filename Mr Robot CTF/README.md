@@ -213,16 +213,18 @@ python -c 'import pty; pty.spawn("/bin/bash")'
 
 su robot
 ```
-
+![](userrobot.png)
 # Root
 During enumartion we find an interresting file accoring to linpeas. And sure it is interesting: an nmap binary with the suid bit set:
+![](nmapsuid.png)
 
-
-The instructions to exploit this are found here: [](https://gtfobins.github.io/gtfobins/nmap/#suid)
+The instructions to exploit this are found here: 
+https://gtfobins.github.io/gtfobins/nmap/#suid
 
 
 Let's preform this an get the last flag!
 
+![](rootrobot.png)
 
 
 
