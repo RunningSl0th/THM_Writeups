@@ -1,4 +1,5 @@
 # Nmap
+We start with nmap TCP 
 ```sh
 ┌──(kali㉿kali)-[~/THM/KIBA/recon/nmap]
 └─$ nmap kiba.thm -p-  --min-rate 2000 -vv -Pn -oA init
@@ -11,7 +12,7 @@ PORT     STATE SERVICE     REASON
 5601/tcp open  esmagent    syn-ack
 
 ```
-
+Results:
 ```sh
 ──(kali㉿kali)-[~/THM/KIBA/recon/nmap]
 └─$ nmap kiba.thm -p22,80,5044,5601  --min-rate 2000 -vv -Pn -oA openscsvs -sC -sV
@@ -72,11 +73,11 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
 # Port 80
-Enumerated with whatweb, nikto, dirb. maybe comeback later
+Enumerated with whatweb, nikto, dirb. Not much useful information for now
 Only linux capabilities?/?
 
 # port 5044
-No results in nmap
+Nmap gave no info about port 5044. I checked it with nc to grab the banner. Also no results:
 
 ```sh
 nc -nvv 10.10.195.146 5044
@@ -88,7 +89,7 @@ nc -nvv 10.10.195.146 5044
 Let's continue
 
 # Port 5601
-from the nmap results we can see that there is an http 302 code. which means a redirect. When we visit:
+From the nmap results we can see that there is an http 302 code. which means a redirect. When we visit:
 http://kiba.thm:5601 we get redirected to http://kiba.thm:5601/app/kibana
 
 After googling what kibana is:
@@ -110,7 +111,7 @@ Instructions for the expoloit can be found here: https://github.com/mpgn/CVE-201
 ```
 BAM! We have a shell as user 'kiba'. We can read the user flag from kiba's home directory.
 
-# Pivileges escaltion
+# Pivileges escalation
 Linpeas showed an interesting file with capabilites:
 
 Manual searching for binaries with capabilites:
