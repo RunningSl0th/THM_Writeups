@@ -2,10 +2,15 @@
 Here are my writeups from Try Hack Me. In the writeups I give some some security recommendations but not all. For example: I don't give the recommendation the disable HTTP and force the use of HTTPS. Doing so makes the writeups more readable.
 
 Writeups:
-1. Basic Pentesting
-2. Pickle Rick
-3. Zeno
-4. Mr. Robot
-5. kiba
+1. Basic Pentesting (lin)
+2. Pickle Rick (lin)
+3. Zeno (lin)
+4. Mr. Robot (lin)
+5. kiba (lin)
+6. Rootme (lin)
 
-6. 
+# Proving Grounds Practice Writeups:
+
+1. Helpdesk (win)
+2. Slort (win)
+3. Nickel (win)
