@@ -34,7 +34,7 @@ As result of the fuzzing the directory we see that there are two interesting dir
 ```
 When we visit the page we can see that there si a page where we can upload files:
 
-![](main.png)
+![](upload.png)
 
 And the possible location where the uploaded file will be stored:
 
@@ -50,7 +50,7 @@ Page says
 Which means (according to google translate): The file has been successfully uploaded!
 php files blocked. Let's check if the file is in the directory listing of the uploads page:
 
-![](test.png)
+![](testupload.png)
 
 Yes it worked! I was able to open the file.
 So next we try to upload a php file to see:
@@ -77,7 +77,7 @@ A great resource for bypassing file extension checksis: [Hacktricks](https://boo
 We start testing with .php2. Yes we have are able to upload a file with a .php2 extension.
 Now we need to try if we can get "Hello Hacker" displayed on the page.
 
-![](php2blank.png)
+![](php2black.png)
 
 Hmm...that doesn't look good. Nothing is shown on the page.
 
