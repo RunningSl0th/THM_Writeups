@@ -9,8 +9,3 @@ Writeups:
 5. kiba (lin)
 6. Rootme (lin)
 
-# Proving Grounds Practice Writeups:
-
-1. Helpdesk (win)
-2. Slort (win)
-3. Nickel (win)
